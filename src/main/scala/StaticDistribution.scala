@@ -1,0 +1,6 @@
+class StaticDistribution {
+
+}
+object StaticDistribution{
+
+}

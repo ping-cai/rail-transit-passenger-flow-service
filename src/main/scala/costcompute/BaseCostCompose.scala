@@ -1,0 +1,5 @@
+package costcompute
+
+class BaseCostCompose {
+
+}
