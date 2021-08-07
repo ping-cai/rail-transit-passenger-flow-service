@@ -3,10 +3,11 @@ package conf
 import com.typesafe.config.{Config, ConfigFactory}
 
 object DynamicConf extends Serializable {
-  //  val conf: Config = ConfigFactory.load("prod.conf")
-  val conf: Config = ConfigFactory.load("dev.conf")
+  val conf: Config = ConfigFactory.load("prod.conf")
+  //  val conf: Config = ConfigFactory.load("dev.conf")
   //  val conf: Config = ConfigFactory.load("tonghao.conf")
   //  val conf: Config = ConfigFactory.load("test.conf")
+  //  val conf: Config = ConfigFactory.load("chongqing.conf")
   val topics: Array[String] = conf.getString("kafka.topic").split(",")
   val groupId: String = conf.getString("kafka.group.id")
   val brokers: String = conf.getString("kafka.broker.list")
@@ -60,7 +61,7 @@ object DynamicConf extends Serializable {
   val odPairDelay: String = conf.getString("od.pair.delayThreshold")
   val windowDuration: String = conf.getString("dynamic.streaming.windowDuration")
   val slideDuration: String = conf.getString("dynamic.streaming.slideDuration")
-
+  val backPushTable: String = conf.getString("oracle.back.push.table")
   //  DataClean
   val afcCleanTopic: Array[String] = conf.getString("kafka.streaming.afc.clean.topic").split(",")
 

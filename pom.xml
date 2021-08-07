@@ -85,12 +85,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <!--<descriptors> &lt;!&ndash;描述文件路径&ndash;&gt;-->
-                    <!--<descriptor>src/main/assembly/package.xml</descriptor>-->
-                    <!--</descriptors>-->
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <descriptors> <!--描述文件路径-->
+                        <descriptor>src/main/assembly/package.xml</descriptor>
+                    </descriptors>
+                    <!--<descriptorRefs>-->
+                    <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
                 </configuration>
                 <executions>
                     <execution>

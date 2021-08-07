@@ -27,6 +27,7 @@
                 <exclude>org.apache.orc:*</exclude>
                 <exclude>org.apache.parquet:*</exclude>
                 <exclude>org.apache.zookeeper:*</exclude>
+                <exclude>org.*:*</exclude>
                 <exclude>javax.*:*</exclude>
             </excludes>
         </dependencySet>

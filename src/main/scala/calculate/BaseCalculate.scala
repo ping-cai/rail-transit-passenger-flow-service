@@ -174,7 +174,7 @@ object BaseCalculate {
     val baseCalculate = new BaseCalculate(baseDataLoad, sectionTravelGraph)
     val legalPath = baseCalculate.getLegalPathList(5, odWithTime: OdWithTime)
     val staticCost = baseCalculate.getStaticCost(legalPath)
-    val minGeneralizedCost = new MinGeneralizedCost(staticCost).compose()
+    val minGeneralizedCost = new MinGeneralizedCost().compose(staticCost)
     val timeSectionFlow = new util.HashMap[TimeKey, util.Map[Section, lang.Double]]()
     val timeIntervalTraffic = new TimeIntervalTraffic(timeSectionFlow)
     val timeStationFlow = new util.HashMap[TimeKey, util.Map[StationWithType, lang.Double]]()

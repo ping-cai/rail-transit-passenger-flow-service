@@ -42,7 +42,7 @@ class DynamicCalculate(baseDataLoad: BaseDataLoad, odWithTime: OdWithTime) {
     //    sectionMovePathCost.forEach((path, cost) =>
     //      println(s"路径是$path 最初的费用是$cost"))
     //最小广义费用
-    val minGeneralizedCost = new MinGeneralizedCost(staticPathCost).compose()
+    val minGeneralizedCost = new MinGeneralizedCost().compose(staticPathCost)
     //    allPathCost.forEach((path, cost) =>
     //      println(s"路径是$path 总费用是$cost")
     //    )

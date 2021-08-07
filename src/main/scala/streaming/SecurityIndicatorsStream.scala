@@ -78,7 +78,7 @@ class SecurityIndicatorsStream(sparkSession: SparkSession) extends StreamCompute
         //        得到静态费用
         val staticCost = baseCalculateBroad.value.getStaticCost(pathList)
         //        得到最小费用
-        val minCost = new MinGeneralizedCost(staticCost).compose()
+        val minCost = new MinGeneralizedCost().compose(staticCost)
         //        Logit分配结果
         val logitResult = Logit.logit(staticCost, minCost, passengers)
         //        最终结果

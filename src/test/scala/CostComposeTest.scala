@@ -32,8 +32,8 @@ object CostComposeTest {
       println(s"路径为$x 总费用为 $y")
     })
 
-    val minGeneralizedCost = new MinGeneralizedCost(pathWithStopTime)
-    println(minGeneralizedCost.compose())
+    val minGeneralizedCost = new MinGeneralizedCost()
+    println(minGeneralizedCost.compose(pathWithStopTime))
     //    结果如下，事实证明路径的总费用已经增加，测试成功
     /*
     路径为94.30499969422817: [100+99+98+97+96+95+94+93+92+91+90+108+89+88+87+86+85+84+83+107+1+26+5+6+2+7+3+8+199+200] 总费用为 21.75

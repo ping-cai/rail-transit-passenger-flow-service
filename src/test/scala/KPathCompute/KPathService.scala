@@ -3,11 +3,13 @@ package KPathCompute
 import java.util.concurrent.TimeUnit
 import java.{lang, util}
 
+import batch.back.KPathTrait
 import conf.ParamsConf
 import dataload.BaseDataLoad
 import distribution.{DistributionResult, StationWithType}
 import kspcalculation.PathService
-import model._
+import model.back.{EdgeModel, ODWithTimeModel}
+import model.{back, _}
 import model.dto.{SectionLoadDTO, StationLoadDTO}
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.sql.SparkSession
@@ -23,7 +25,7 @@ import scala.util.parsing.json._
 class KPathService(baseDataLoad: BaseDataLoad, kspNum: Int) extends KPathTrait {
   private val pathService: PathService = new PathService(kspNum, baseDataLoad.getGraph, baseDataLoad.getSectionWithDirectionMap)
 
-  override def compute(ODModel: ODModel): List[PathModel] = {
+  override def compute(ODModel: back.ODModel): List[back.PathModel] = {
     val legalKPath = pathService.getLegalKPath(ODModel.inId, ODModel.outId)
     legalKPath.asScala.flatMap(path => {
       val edges = path.getEdges
@@ -32,7 +34,7 @@ class KPathService(baseDataLoad: BaseDataLoad, kspNum: Int) extends KPathTrait {
         totalCost += edge.getWeight
         List(EdgeModel(edge.getFromNode, edge.getToNode, edge.getWeight))
       }).toList
-      List(PathModel(edgeModelList, totalCost))
+      List(back.PathModel(edgeModelList, totalCost))
     }).toList
   }
 }

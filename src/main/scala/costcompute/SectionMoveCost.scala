@@ -2,12 +2,14 @@ package costcompute
 
 import java.util
 
-import domain.param.CostParam
+import costcompute.back.BackCompose
 import kspcalculation.Path
+import model.back.PathWithId
 
-class SectionMoveCost(sectionMoveGraph: SectionTravelGraph) extends CostCompose {
-  private var TRANSFER_PENALTY = CostParam.TRANSFER_PENALTY
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
+class SectionMoveCost(sectionMoveGraph: SectionTravelGraph) extends CostCompose with BackCompose {
   /**
     *
     * @param kspResult K短路结果
@@ -17,28 +19,17 @@ class SectionMoveCost(sectionMoveGraph: SectionTravelGraph) extends CostCompose 
   override def compose(kspResult: util.List[Path]): java.util.Map[Path, Double] = {
     val sectionMoveCost = new java.util.HashMap[Path, Double]
     kspResult.forEach(
-      //      x => {
-      //      val edges = x.getEdges
-      //      var pathMoveCost = 0.0
-      //      edges.forEach(edge => {
-      //        //        得到区间运行时间
-      //        val travelSeconds = sectionMoveGraph.getTravelTime(Section.createSectionByEdge(edge))
-      //        if (travelSeconds != null) {
-      //          pathMoveCost += travelSeconds / 60.0
-      //        } else {
-      //          //          得不到区间运行时间就是换乘
-      //          pathMoveCost += TRANSFER_PENALTY
-      //        }
-      //      })
-      //      if (pathMoveCost != 0) {
-      //        //        运行时间一定不会为零，如果为零，那么应该是上述的获取时间出现问题
-      //        sectionMoveCost.put(x, pathMoveCost)
-      //      } else {
-      //        sectionMoveCost.put(x, x.getTotalCost)
-      //      }
       x => {
         sectionMoveCost.put(x, x.getTotalCost)
       })
+    sectionMoveCost
+  }
+
+  override def compose(pathBuffer: ListBuffer[PathWithId]): mutable.HashMap[PathWithId, Double] = {
+    val sectionMoveCost = mutable.HashMap[PathWithId, Double]()
+    pathBuffer.foreach(pathWithId => {
+      sectionMoveCost.put(pathWithId, pathWithId.path.getTotalCost)
+    })
     sectionMoveCost
   }
 }

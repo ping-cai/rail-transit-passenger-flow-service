@@ -2,11 +2,12 @@ package KPathCompute
 
 import java.util.Properties
 
+import batch.back.KPathTrait
 import conf.DynamicConf
 import costcompute.Section
 import dataload.{BaseDataLoad, Load}
 import kspcalculation.PathService
-import model.{EdgeModel, ODModel, ODWithTimeModel, PathModel}
+import model.back._
 import org.apache.spark.sql._
 
 import scala.collection.JavaConverters._
@@ -104,7 +105,7 @@ class KPathSave(baseDataLoad: BaseDataLoad, pathNum: Int, sparkSession: SparkSes
         firstNode = edgeModel.toNode
         tempWeight = 0.0
       } else {
-        tempWeight += edgeModel.weigh
+        tempWeight += edgeModel.weight
       }
     })
     result append EdgeDetails(pathId, result.size, EdgeModel(firstNode, lastNode, tempWeight))
@@ -135,17 +136,8 @@ class KPathSave(baseDataLoad: BaseDataLoad, pathNum: Int, sparkSession: SparkSes
   }
 }
 
-case class ODWithPath(inId: String, outId: String, pathId: Int, pathInfo: String)
-
-case class PathDetails(pathId: String, inId: String, outId: String, pathInfo: PathInfo)
-
-case class PathInfo(path: PathModel, cost: Double, transferCount: Int, LineSet: String)
-
-case class EdgeDetails(pathId: String, edgeSerial: Int, edgeModel: EdgeModel)
-
 object KPathSave {
   def main(args: Array[String]): Unit = {
-    testPath()
   }
 
   def pathSave(): Unit = {
@@ -192,6 +184,7 @@ object KPathSave {
     //计算所有OD的K短路集合
     //    需要对K短路集合进行编号,先按照费用从小到大排序
     val pathDetailDataSet = odWithTimeArray.flatMap(od => {
+
       val pathDetailList = kPathSaveBroad.value.compute2PathList(od)
       pathDetailList
     })
@@ -217,38 +210,38 @@ object KPathSave {
     println(s"存储K短路成功！整个耗时${(endTime - startTime) / 1000}秒")
   }
 
-  def testPath(): Unit = {
-    val sparkSession = SparkSession.builder().appName("KPathSave").master("local[*]")
-      .config("spark.sql.shuffle.partitions", 100) //设置并行度100
-      .getOrCreate()
-    val baseDataLoad = new BaseDataLoad
-    val pathNum = 6
-    val kPathSave = new KPathSave(baseDataLoad, pathNum, sparkSession)
-
-    //    加载需要计算的数据
-    //    需要加载的表
-    val stationTable = DynamicConf.stationTable
-    //    需要加载的数据库连接
-    val url = DynamicConf.localhostUrl
-    //    需要加载的账户密码
-    val prop = Load.prop
-    val stationFrame = sparkSession.read.jdbc(url, stationTable, prop)
-    stationFrame.createOrReplaceTempView("station")
-    val allOdFrame = List(ODWithTimeModel("1", "25", "", ""))
-    import sparkSession.implicits._
-    //    调整并行度
-    //    先进行广播变量
-    val sc = sparkSession.sparkContext
-
-    val kPathSaveBroad = sc.broadcast(kPathSave)
-
-    //计算所有OD的K短路集合
-    //    需要对K短路集合进行编号,先按照费用从小到大排序
-    val pathDetailDataSet = allOdFrame.flatMap(od => {
-      val pathDetailList = kPathSaveBroad.value.compute2PathList(od)
-      pathDetailList
-    })
-    pathDetailDataSet
-    pathDetailDataSet.foreach(x => println(x))
-  }
+//  def testPath(): Unit = {
+//    val sparkSession = SparkSession.builder().appName("KPathSave").master("local[*]")
+//      .config("spark.sql.shuffle.partitions", 100) //设置并行度100
+//      .getOrCreate()
+//    val baseDataLoad = new BaseDataLoad
+//    val pathNum = 6
+//    val kPathSave = new KPathSave(baseDataLoad, pathNum, sparkSession)
+//
+//    //    加载需要计算的数据
+//    //    需要加载的表
+//    val stationTable = DynamicConf.stationTable
+//    //    需要加载的数据库连接
+//    val url = DynamicConf.localhostUrl
+//    //    需要加载的账户密码
+//    val prop = Load.prop
+//    val stationFrame = sparkSession.read.jdbc(url, stationTable, prop)
+//    stationFrame.createOrReplaceTempView("station")
+//    val allOdFrame = List(ODWithTimeModel("1", "25", "", ""))
+//    import sparkSession.implicits._
+//    //    调整并行度
+//    //    先进行广播变量
+//    val sc = sparkSession.sparkContext
+//
+//    val kPathSaveBroad = sc.broadcast(kPathSave)
+//
+//    //计算所有OD的K短路集合
+//    //    需要对K短路集合进行编号,先按照费用从小到大排序
+//    val pathDetailDataSet = allOdFrame.flatMap(od => {
+//      val pathDetailList = kPathSaveBroad.value.compute2PathList(od)
+//      pathDetailList
+//    })
+//    pathDetailDataSet
+//    pathDetailDataSet.foreach(x => println(x))
+//  }
 }

@@ -11,9 +11,9 @@ class HDFSODLoad(hdfsPath: String) {
     Array(
       StructField("id", IntegerType, nullable = true),
       StructField("in_number", IntegerType, nullable = true),
-      StructField("in_time", StringType, nullable = true),
       StructField("out_number", IntegerType, nullable = true),
-      StructField("passengers", DoubleType, nullable = true),
+      StructField("in_time", StringType, nullable = true),
+      StructField("passengers", DoubleType, nullable = true)
     )
   )
 
@@ -37,7 +37,7 @@ class HDFSODLoad(hdfsPath: String) {
       val passengers = od.getDouble(3)
       val odWithTime = new OdWithTime(inId, outId, inTime, passengers)
       odWithTime
-    })
+    }).filter(x => x.getPassengers > 0)
     odWithTimeRdd
   }
 }

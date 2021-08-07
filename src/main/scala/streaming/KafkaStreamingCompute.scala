@@ -102,7 +102,7 @@ class KafkaStreamingCompute(sparkSession: SparkSession) extends StreamCompute {
         //        得到静态费用
         val staticCost = baseCalculateBroad.value.getStaticCost(pathList)
         //        得到最小费用
-        val minCost = new MinGeneralizedCost(staticCost).compose()
+        val minCost = new MinGeneralizedCost().compose(staticCost)
         //        创建临时集合
         val tempResult = Control.createDistributionResult()
         Range(0, 2).foreach(

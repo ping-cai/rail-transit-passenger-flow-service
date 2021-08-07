@@ -46,7 +46,7 @@ class BaseController(sparkSession: SparkSession) extends Control {
       def tryCost = {
         val legalPath = baseCalculate.getLegalPathList(kspNumber, odWithTime)
         val staticCost = baseCalculate.getStaticCost(legalPath)
-        val minGeneralizedCost = new MinGeneralizedCost(staticCost).compose()
+        val minGeneralizedCost = new MinGeneralizedCost().compose(staticCost)
         (legalPath, staticCost, minGeneralizedCost)
       }
 

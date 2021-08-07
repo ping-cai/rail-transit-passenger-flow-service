@@ -30,7 +30,7 @@ object Control {
   def tryCost(baseCalculate: BaseCalculate, kspNumber: Int, odWithTime: OdWithTime) = {
     val legalPath = baseCalculate.getLegalPathList(kspNumber, odWithTime)
     val staticCost = baseCalculate.getStaticCost(legalPath)
-    val minGeneralizedCost = new MinGeneralizedCost(staticCost).compose()
+    val minGeneralizedCost = new MinGeneralizedCost().compose(staticCost)
     //    合法的路径集合，静态广义费用，最小广义费用
     (legalPath, staticCost, minGeneralizedCost)
   }

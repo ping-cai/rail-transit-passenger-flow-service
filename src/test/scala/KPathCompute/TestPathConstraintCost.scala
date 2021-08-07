@@ -1,7 +1,7 @@
 package KPathCompute
 
 import dataload.BaseDataLoad
-import model.ODWithTimeModel
+import model.back.ODWithTimeModel
 
 class TestPathConstraintCost {
   def test(): Unit ={
